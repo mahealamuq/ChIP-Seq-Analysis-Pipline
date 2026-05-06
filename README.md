@@ -7,9 +7,9 @@ The workflow is designed for transcription factor ChIP-seq experiments comparing
 
 ## Table of contents 
 
-- [1. Introduction](#1-.-introduction)
-- [2. Workflow Overview](#2-.-workflow-overview)
-3. Software Requirements
+- [Introduction](#introduction)
+- [2. Workflow Overview](#workflow-overview)
+- [Software Requirements](#software-requirements)
 4. Installation
 5. Data Download
 6. Running the Pipeline
@@ -21,7 +21,7 @@ The workflow is designed for transcription factor ChIP-seq experiments comparing
 
 # ChIP-seq Analysis Pipeline
 
-## 1. Introduction
+## Introduction
 
 This repository contains a complete ChIP-seq bioinformatics workflow for identifying genome-wide protein–DNA binding sites using next-generation sequencing (NGS) data.
 
@@ -47,9 +47,9 @@ to identify statistically enriched DNA-binding regions (peaks).
 
 ---
 
-# 2. Workflow Overview
+## Workflow Overview
 
-## Pipeline Workflow
+**Pipeline Workflow**
 
 ```text
 FASTQ Files
@@ -67,7 +67,7 @@ Peak Visualization (IGV)
 Motif Discovery (MEME/FIMO)
 ```
 
-## Main Steps
+ **Main Steps**
 
 1. Download raw sequencing data
 2. Perform quality control
@@ -80,13 +80,13 @@ Motif Discovery (MEME/FIMO)
 
 ---
 
-# 3. Software Requirements
+## Software Requirements
 
-## Operating System
+**Operating System**
 
 - Ubuntu 20.04+ recommended
 
-## Required Software
+**Required Software**
 
 | Software | Purpose |
 |---|---|
@@ -101,15 +101,15 @@ Motif Discovery (MEME/FIMO)
 
 ---
 
-# 4. Installation
+## Installation
 
-## Update Ubuntu
+**Update Ubuntu**
 
 ```bash
 sudo apt update
 ```
 
-## Install Required Tools
+**Install Required Tools**
 
 ```bash
 sudo apt install -y \
@@ -124,19 +124,19 @@ python3-pip \
 default-jre
 ```
 
-## Install MACS2
+**Install MACS2**
 
 ```bash
 pip3 install MACS2
 ```
 
-## Install deepTools
+**Install deepTools**
 
 ```bash
 sudo apt install -y deeptools
 ```
 
-## Verify Installation
+**Verify Installation**
 
 ```bash
 fastqc --version
@@ -147,16 +147,16 @@ macs2 --version
 
 ---
 
-# 5. Data Download
+## Data Download
 
-## Create Project Directory
+**Create Project Directory**
 
 ```bash
 mkdir -p chipseq_project/{raw_data,fastqc,index,bam,peaks,motifs,genome}
 cd chipseq_project
 ```
 
-## Download Reference Genome (hg19)
+**Download Reference Genome (hg19)**
 
 ```bash
 cd genome
@@ -166,7 +166,7 @@ wget https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz
 gunzip hg19.fa.gz
 ```
 
-## Build Bowtie2 Index
+**Build Bowtie2 Index**
 
 ```bash
 cd ../index
@@ -174,7 +174,7 @@ cd ../index
 bowtie2-build ../genome/hg19.fa hg19
 ```
 
-## Download SRA Data
+**Download SRA Data**
 
 Example:
 - ChIP sample = SRR227524
@@ -187,14 +187,14 @@ prefetch SRR227524
 prefetch SRR227650
 ```
 
-## Convert SRA to FASTQ
+**Convert SRA to FASTQ**
 
 ```bash
 fasterq-dump SRR227524
 fasterq-dump SRR227650
 ```
 
-## Compress FASTQ Files
+**Compress FASTQ Files**
 
 ```bash
 gzip *.fastq
@@ -202,9 +202,9 @@ gzip *.fastq
 
 ---
 
-# 6. Running the Pipeline
+## Running the Pipeline
 
-## Step 1: Quality Control
+**Step 1: Quality Control**
 
 ```bash
 cd ../fastqc
@@ -212,7 +212,7 @@ cd ../fastqc
 fastqc ../raw_data/*.fastq.gz -o .
 ```
 
-## Step 2: Align Reads with Bowtie2
+**Step 2: Align Reads with Bowtie2**
 
 ```bash
 cd ../bam
@@ -226,7 +226,7 @@ bowtie2 -x ../index/hg19 \
 -S control.sam
 ```
 
-## Step 3: Convert SAM to BAM
+**Step 3: Convert SAM to BAM**
 
 ```bash
 samtools view -bS chip.sam | samtools sort -o chip.sorted.bam
@@ -234,7 +234,7 @@ samtools view -bS chip.sam | samtools sort -o chip.sorted.bam
 samtools view -bS control.sam | samtools sort -o control.sorted.bam
 ```
 
-## Step 4: Index BAM Files
+**Step 4: Index BAM Files**
 
 ```bash
 samtools index chip.sorted.bam
@@ -242,7 +242,7 @@ samtools index chip.sorted.bam
 samtools index control.sorted.bam
 ```
 
-## Step 5: Alignment Statistics
+**Step 5: Alignment Statistics**
 
 ```bash
 samtools flagstat chip.sorted.bam
@@ -252,11 +252,11 @@ samtools flagstat control.sorted.bam
 
 ---
 
-# 7. Peak Calling
+## Peak Calling
 
 Peak calling identifies enriched genomic regions where proteins bind DNA.
 
-## Run MACS2
+**Run MACS2**
 
 ```bash
 cd ../peaks
@@ -271,7 +271,7 @@ macs2 callpeak \
 --outdir .
 ```
 
-## Important Output Files
+**Important Output Files**
 
 | File | Description |
 |---|---|
@@ -280,7 +280,7 @@ macs2 callpeak \
 | xls | Statistical information |
 | bedGraph | Signal tracks |
 
-## Count Peaks
+**Count Peaks**
 
 ```bash
 wc -l chip_vs_control_peaks.narrowPeak
@@ -288,9 +288,9 @@ wc -l chip_vs_control_peaks.narrowPeak
 
 ---
 
-# 8. Visualization in IGV
+## 8. Visualization in IGV
 
-## Create BigWig Coverage Files
+**Create BigWig Coverage Files**
 
 ```bash
 cd ../bam
@@ -308,7 +308,7 @@ bamCoverage \
 --normalizeUsing RPKM
 ```
 
-## Download IGV
+**Download IGV**
 
 ```bash
 cd ..
@@ -318,7 +318,7 @@ wget https://data.broadinstitute.org/igv/projects/downloads/2.17/IGV_Linux_2.17.
 unzip IGV_Linux_2.17.4_WithJava.zip
 ```
 
-## Launch IGV
+**Launch IGV**
 
 ```bash
 cd IGV_Linux_2.17.4
@@ -326,7 +326,7 @@ cd IGV_Linux_2.17.4
 ./igv.sh
 ```
 
-## Load Files in IGV
+**Load Files in IGV**
 
 Load:
 - chip.sorted.bam
@@ -340,11 +340,11 @@ Select:
 
 ---
 
-# 9. Motif Analysis
+## Motif Analysis
 
 Motif analysis identifies DNA sequence patterns enriched within peak regions.
 
-## Extract Peak Sequences
+**Extract Peak Sequences**
 
 ```bash
 cd ../motifs
@@ -355,7 +355,7 @@ bedtools getfasta \
 -fo chip_peaks.fa
 ```
 
-## Run MEME
+**Run MEME**
 
 ```bash
 meme chip_peaks.fa \
@@ -367,7 +367,7 @@ meme chip_peaks.fa \
 -maxw 20
 ```
 
-## Run FIMO
+**Run FIMO**
 
 ```bash
 fimo \
@@ -376,7 +376,7 @@ meme_output/meme.xml \
 chip_peaks.fa
 ```
 
-## Open Results
+**Open Results**
 
 ```bash
 firefox meme_output/meme.html
@@ -384,7 +384,7 @@ firefox meme_output/meme.html
 
 ---
 
-# 10. Results
+## Results
 
 Expected outputs include:
 
@@ -395,7 +395,7 @@ Expected outputs include:
 - Peak summit regions
 - Motif enrichment results
 
-## Example Biological Interpretation
+**Example Biological Interpretation**
 
 - Peaks represent potential transcription factor binding sites
 - Strong enrichment indicates protein-DNA interaction
@@ -403,42 +403,42 @@ Expected outputs include:
 
 ---
 
-# 11. References
+## References
 
-## ChIP-seq Guidelines
+**ChIP-seq Guidelines**
 
 Bailey TL et al. (2013).  
 Practical Guidelines for the Comprehensive Analysis of ChIP-seq Data.  
 PLoS Computational Biology.  
 https://doi.org/10.1371/journal.pcbi.1003326
 
-## ENCODE Guidelines
+**ENCODE Guidelines**
 
 Landt SG et al. (2012).  
 ChIP-seq Guidelines and Practices of the ENCODE and modENCODE Consortia.  
 Genome Research.  
 https://genome.cshlp.org/content/22/9/1813
 
-## Software Documentation
+### Software Documentation
 
-### Bowtie2
+**Bowtie2**
 http://bowtie-bio.sourceforge.net/bowtie2
 
-### SAMtools
+**SAMtools**
 http://www.htslib.org
 
-### MACS2
+**MACS2**
 https://github.com/macs3-project/MACS
 
-### MEME Suite
+**MEME Suite**
 https://meme-suite.org
 
-### IGV
+**IGV**
 https://software.broadinstitute.org/software/igv
 
 ---
 
-# Repository Structure
+**Repository Structure**
 
 ```text
 chipseq-analysis-pipeline/
@@ -456,10 +456,10 @@ chipseq-analysis-pipeline/
 └── chipseq_pipeline.sh
 ```
 
-## Author
+**Author**
 
 Mahe Alam
 
-## License
+**License**
 
 MIT License
