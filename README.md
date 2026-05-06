@@ -5,6 +5,20 @@ This repository contains a complete ChIP-seq bioinformatics workflow for identif
 
 The workflow is designed for transcription factor ChIP-seq experiments comparing antibody-enriched samples against input/control samples.
 
+## Table of contain 
+
+1. Introduction
+2. Workflow Overview
+3. Software Requirements
+4. Installation
+5. Data Download
+6. Running the Pipeline
+7. Peak Calling
+8. Visualization in IGV
+9. Motif Analysis
+10. Results
+11. References
+
 ## Workflow
 
  FASTQ
