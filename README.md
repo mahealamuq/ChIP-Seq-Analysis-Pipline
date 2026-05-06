@@ -10,15 +10,19 @@ The workflow is designed for transcription factor ChIP-seq experiments comparing
  FASTQ
  
  ↓
+ 
 FastQC
 
  ↓
+ 
 Bowtie2 Alignment
 
  ↓
+ 
 SAMtools BAM Processing
 
  ↓
+ 
 MACS2 Peak Calling
 
  ↓
