@@ -8,7 +8,7 @@ The workflow is designed for transcription factor ChIP-seq experiments comparing
 ## Table of contents 
 
 - [Introduction](#introduction)
-2. Workflow Overview
+- [Workflow Overview](#workflow-overview)
 3. Software Requirements
 4. Installation
 5. Data Download
@@ -21,7 +21,7 @@ The workflow is designed for transcription factor ChIP-seq experiments comparing
 
 # ChIP-seq Analysis Pipeline
 
-## 1. Introduction
+## Introduction
 
 This repository contains a complete ChIP-seq bioinformatics workflow for identifying genome-wide protein–DNA binding sites using next-generation sequencing (NGS) data.
 
