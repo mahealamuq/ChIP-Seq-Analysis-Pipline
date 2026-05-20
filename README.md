@@ -369,8 +369,6 @@ cd IGV_Linux_2.17.4
 **Load Files in IGV**
 
 Load:
-- chip.sorted.bam
-- control.sorted.bam
 - chip.bw
 - control.bw
 - narrowPeak file
